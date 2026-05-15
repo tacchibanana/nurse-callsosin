@@ -9,6 +9,7 @@
             --red: #e60012;
             --yellow: #f39800;
             --green: #009944;
+            --blue: #007bff;
             --gray: #666666;
             --bg-color: #fafafa;
         }
@@ -18,21 +19,17 @@
             background-color: var(--bg-color);
             margin: 0;
             padding: 20px;
-            padding-bottom: 120px; /* フッター分の余白 */
+            padding-bottom: 140px;
             user-select: none;
         }
 
-        .header {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
+        .header { text-align: center; margin-bottom: 20px; }
         .room-tag {
             display: inline-block;
             background: #333;
             color: white;
-            padding: 5px 15px;
-            border-radius: 5px;
+            padding: 8px 20px;
+            border-radius: 50px;
             font-weight: bold;
             font-size: 1.2rem;
         }
@@ -45,160 +42,89 @@
             padding-left: 10px;
         }
 
-        /* 緊急度選択ボタン（付箋デザイン） */
-        .priority-group {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-
+        /* 状況選択 */
+        .priority-group { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
         .priority-btn {
-            background: white;
-            border-radius: 12px;
-            padding: 20px 5px;
-            text-align: center;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            background: white; border-radius: 12px; padding: 20px 5px;
+            text-align: center; font-weight: bold; cursor: pointer;
+            display: flex; flex-direction: column; align-items: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1); border: 5px solid #ddd;
         }
+        .btn-red { border-color: var(--red); color: var(--red); }
+        .btn-yellow { border-color: var(--yellow); color: var(--yellow); }
+        .btn-green { border-color: var(--green); color: var(--green); }
+        .priority-btn.active { background-color: #333; color: white; border-color: #333; transform: translateY(4px); box-shadow: none; }
 
-        .btn-red { border: 5px solid var(--red); color: var(--red); }
-        .btn-yellow { border: 5px solid var(--yellow); color: var(--yellow); }
-        .btn-green { border: 5px solid var(--green); color: var(--green); }
-
-        .priority-btn.active {
-            background-color: #333;
-            color: white;
-            border-color: #333;
-            transform: translateY(4px);
-            box-shadow: none;
-        }
-
-        .priority-btn span { font-size: 0.9rem; margin-top: 5px; }
-
-        /* メニューグリッド */
-        .menu-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-        }
-
+        /* メニュー */
+        .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
         .menu-item { display: none; }
         .menu-label {
-            background: white;
-            border: 3px solid #ddd;
-            padding: 18px 10px;
-            border-radius: 12px;
-            text-align: center;
-            font-weight: bold;
-            font-size: 1.1rem;
-            display: block;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            background: white; border: 3px solid #ddd; padding: 18px 10px;
+            border-radius: 12px; text-align: center; font-weight: bold; font-size: 1.1rem;
+            display: block; box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
+        .menu-item:checked + .menu-label { background-color: #555; color: white; border-color: #555; }
 
-        .menu-item:checked + .menu-label {
-            background-color: #555;
-            color: white;
-            border-color: #555;
+        /* 自由記載エリア */
+        #other-input-area {
+            display: none; margin-top: 15px; grid-column: span 2;
+            background: #eee; padding: 15px; border-radius: 12px;
+        }
+        #free-text {
+            width: 100%; height: 80px; border: 1px solid #ccc; border-radius: 8px;
+            padding: 10px; font-size: 1rem; box-sizing: border-box;
+        }
+        .voice-btn {
+            margin-top: 10px; width: 100%; background: white; border: 2px solid var(--blue);
+            color: var(--blue); padding: 10px; border-radius: 8px; font-weight: bold; font-size: 1rem;
         }
 
         /* 固定フッター */
         .footer {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background: white;
-            padding: 20px;
-            box-sizing: border-box;
-            box-shadow: 0 -4px 15px rgba(0,0,0,0.1);
-            z-index: 100;
+            position: fixed; bottom: 0; left: 0; width: 100%;
+            background: white; padding: 20px; box-sizing: border-box;
+            box-shadow: 0 -4px 15px rgba(0,0,0,0.1); z-index: 100;
         }
-
         .send-btn {
-            width: 100%;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            padding: 22px;
-            border-radius: 50px;
-            font-size: 1.6rem;
-            font-weight: bold;
-            box-shadow: 0 4px 0 #0056b3;
+            width: 100%; background-color: var(--blue); color: white;
+            border: none; padding: 22px; border-radius: 50px;
+            font-size: 1.6rem; font-weight: bold; box-shadow: 0 4px 0 #0056b3;
         }
+        .send-btn:active { transform: translateY(3px); box-shadow: none; }
 
-        .send-btn:active {
-            transform: translateY(3px);
-            box-shadow: none;
-        }
-
-        /* 送信後オーバーレイ */
+        /* オーバーレイ */
         #overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.9);
-            color: white;
-            z-index: 1000;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 20px;
-            box-sizing: border-box;
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9); color: white; z-index: 1000;
+            flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px;
         }
-
         .cancel-btn {
-            margin-top: 40px;
-            background: var(--gray);
-            color: white;
-            border: 2px solid white;
-            padding: 15px 40px;
-            border-radius: 10px;
-            font-size: 1.2rem;
+            margin-top: 40px; background: var(--gray); color: white;
+            border: 2px solid white; padding: 15px 40px; border-radius: 10px; font-size: 1.2rem;
         }
-
         .loader {
-            border: 8px solid #f3f3f3;
-            border-top: 8px solid var(--red);
-            border-radius: 50%;
-            width: 60px;
-            height: 60px;
-            animation: spin 2s linear infinite;
-            margin-bottom: 20px;
+            border: 8px solid #f3f3f3; border-top: 8px solid var(--red);
+            border-radius: 50%; width: 60px; height: 60px; animation: spin 2s linear infinite; margin-bottom: 20px;
         }
-
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
 
 <div class="header">
-    <div class="room-tag">205-A の方</div>
+    <div class="room-tag" id="display-room">読み込み中...</div>
 </div>
 
 <h2>1. 状況をえらんでください</h2>
 <div class="priority-group">
     <div class="priority-btn btn-red" onclick="selectPriority('urgent', this)">
-        <strong>すぐ来て</strong>
-        <span>(緊急)</span>
+        <strong>すぐ来て</strong><span>(緊急)</span>
     </div>
     <div class="priority-btn btn-yellow" onclick="selectPriority('normal', this)">
-        <strong>急いでいない</strong>
-        <span>(あとで)</span>
+        <strong>急いでいない</strong><span>(あとで)</span>
     </div>
     <div class="priority-btn btn-green" onclick="selectPriority('consult', this)">
-        <strong>相談したい</strong>
-        <span>(聞きたい)</span>
+        <strong>相談したい</strong><span>(聞きたい)</span>
     </div>
 </div>
 
@@ -209,13 +135,17 @@
     <label><input type="checkbox" class="menu-item" value="吐きそう"><span class="menu-label">吐きそう</span></label>
     <label><input type="checkbox" class="menu-item" value="気持ち悪い"><span class="menu-label">気持ち悪い</span></label>
     <label><input type="checkbox" class="menu-item" value="息苦しい"><span class="menu-label">息苦しい</span></label>
-    <label><input type="checkbox" class="menu-item" value="さむい"><span class="menu-label">さむい</span></label>
-    <label><input type="checkbox" class="menu-item" value="あつい"><span class="menu-label">あつい</span></label>
     <label><input type="checkbox" class="menu-item" value="手伝って"><span class="menu-label">手伝って</span></label>
+    
     <label style="grid-column: span 2;">
-        <input type="checkbox" class="menu-item" value="その他">
+        <input type="checkbox" class="menu-item" value="その他" id="other-check">
         <span class="menu-label">💬 その他 (自由入力)</span>
     </label>
+
+    <div id="other-input-area">
+        <textarea id="free-text" placeholder="こちらに用件を詳しく入力、または音声で入力してください。"></textarea>
+        <button class="voice-btn" id="voiceBtn">🎤 声で入力する</button>
+    </div>
 </div>
 
 <div class="footer">
@@ -230,80 +160,104 @@
 </div>
 
 <script type="module">
-    // Firebase SDKのインポート
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getFirestore, collection, addDoc, deleteDoc, doc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, deleteDoc, doc, serverTimestamp, initializeFirestore } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-    // 悠さんのプロジェクト設定
     const firebaseConfig = {
         apiKey: "AIzaSyBeL7xd049PjR-Sl18C-EJ2HgCkjzKI0SM",
         authDomain: "nursecallapp-bac29.firebaseapp.com",
         projectId: "nursecallapp-bac29",
         storageBucket: "nursecallapp-bac29.firebasestorage.app",
         messagingSenderId: "690697442852",
-        appId: "1:690697442852:web:75b17f1abc8b7b20f6aab1",
-        measurementId: "G-1LPL58Q1DP"
+        appId: "1:690697442852:web:75b17f1abc8b7b20f6aab1"
     };
 
-    // Firebase初期化
     const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+    const db = initializeFirestore(app, { experimentalForceLongPolling: true });
+
+    // URLから部屋番号を取得
+    const params = new URLSearchParams(window.location.search);
+    const room = params.get('room') || "番号なし";
+    document.getElementById('display-room').innerText = room + " の方";
 
     let selectedPriority = "";
     let currentCallId = null;
 
-    // 緊急度選択の処理
+    // 状況選択
     window.selectPriority = (p, el) => {
         selectedPriority = p;
         document.querySelectorAll('.priority-btn').forEach(btn => btn.classList.remove('active'));
         el.classList.add('active');
     };
 
-    // 送信処理
-    document.getElementById('sendBtn').addEventListener('click', async () => {
-        if (!selectedPriority) {
-            alert("「1. 状況をえらんでください」のどれかを押してください。");
-            return;
+    // 「その他」チェックの連動
+    document.getElementById('other-check').addEventListener('change', (e) => {
+        document.getElementById('other-input-area').style.display = e.target.checked ? "block" : "none";
+    });
+
+    // 音声入力機能
+    const voiceBtn = document.getElementById('voiceBtn');
+    const freeText = document.getElementById('free-text');
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+    if (SpeechRecognition) {
+        const recognition = new SpeechRecognition();
+        recognition.lang = 'ja-JP';
+        voiceBtn.onclick = () => {
+            recognition.start();
+            voiceBtn.innerText = "🎤 聞いています...";
+        };
+        recognition.onresult = (event) => {
+            freeText.value += event.results[0][0].transcript;
+            voiceBtn.innerText = "🎤 声で入力する";
+        };
+        recognition.onerror = () => {
+            voiceBtn.innerText = "🎤 声で入力する";
+            alert("音声認識がうまく動きませんでした。");
+        };
+    } else {
+        voiceBtn.style.display = "none";
+    }
+
+    // 送信
+    document.getElementById('sendBtn').onclick = async () => {
+        if (!selectedPriority) return alert("状況を選んでください");
+
+        const menus = Array.from(document.querySelectorAll('.menu-item:checked')).map(el => el.value);
+        if (menus.includes("その他")) {
+            const text = freeText.value.trim();
+            if (text) menus.push(`(詳細: ${text})`);
         }
 
-        const selectedMenus = Array.from(document.querySelectorAll('.menu-item:checked')).map(el => el.value);
-
         try {
-            // Firestoreへ追加
             const docRef = await addDoc(collection(db, "calls"), {
-                room: "205-A",
+                room: room,
                 priority: selectedPriority,
-                menu: selectedMenus,
-                status: "waiting",
+                menu: menus,
                 createdAt: serverTimestamp()
             });
-
             currentCallId = docRef.id;
             document.getElementById('overlay').style.display = 'flex';
         } catch (e) {
-            console.error("Error adding document: ", e);
-            alert("送信に失敗しました。電波の良いところでやり直してください。");
+            alert("送信失敗。ネットを確認してください。");
         }
-    });
+    };
 
-    // 取り消し処理
-    document.getElementById('cancelBtn').addEventListener('click', async () => {
+    // 取り消し
+    document.getElementById('cancelBtn').onclick = async () => {
         if (currentCallId) {
-            try {
-                await deleteDoc(doc(db, "calls", currentCallId));
-                document.getElementById('overlay').style.display = 'none';
-                currentCallId = null;
-                // 選択をリセット
-                document.querySelectorAll('.menu-item').forEach(el => el.checked = false);
-                document.querySelectorAll('.priority-btn').forEach(btn => btn.classList.remove('active'));
-                selectedPriority = "";
-                alert("呼び出しを取り消しました。");
-            } catch (e) {
-                console.error("Error deleting document: ", e);
-            }
+            await deleteDoc(doc(db, "calls", currentCallId));
+            document.getElementById('overlay').style.display = 'none';
+            currentCallId = null;
+            // リセット
+            document.querySelectorAll('.menu-item').forEach(el => el.checked = false);
+            document.querySelectorAll('.priority-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById('other-input-area').style.display = "none";
+            freeText.value = "";
+            selectedPriority = "";
+            alert("取り消しました。");
         }
-    });
+    };
 </script>
-
 </body>
 </html>

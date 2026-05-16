@@ -12,6 +12,9 @@
             --blue: #007bff;
             --gray: #666666;
             --bg-color: #fafafa;
+            /* 認知症の方に認識しやすい薄い赤の定義 */
+            --light-red: #ffebec;
+            --active-red: #ffb3b7;
         }
 
         body {
@@ -32,6 +35,13 @@
             border-radius: 50px;
             font-weight: bold;
             font-size: 1.2rem;
+        }
+        /* お名前表示用のスタイル */
+        .name-tag {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-top: 10px;
+            color: #333;
         }
 
         h2 {
@@ -55,15 +65,16 @@
         .btn-green { border-color: var(--green); color: var(--green); }
         .priority-btn.active { background-color: #333; color: white; border-color: #333; transform: translateY(4px); box-shadow: none; }
 
-        /* メニュー */
+        /* メニュー（薄い赤ベースに修正） */
         .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
         .menu-item { display: none; }
         .menu-label {
-            background: white; border: 3px solid #ddd; padding: 18px 10px;
+            background: var(--light-red); border: 3px solid #ffccd0; padding: 18px 10px;
             border-radius: 12px; text-align: center; font-weight: bold; font-size: 1.1rem;
-            display: block; box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            display: block; box-shadow: 0 2px 4px rgba(0,0,0,0.05); color: #b31412;
         }
-        .menu-item:checked + .menu-label { background-color: #555; color: white; border-color: #555; }
+        /* 選択された時は少し濃い赤にして認識しやすく */
+        .menu-item:checked + .menu-label { background-color: #d9534f; color: white; border-color: #d9534f; }
 
         /* 自由記載エリア */
         #other-input-area {
@@ -112,7 +123,8 @@
 <body>
 
 <div class="header">
-    <div class="room-tag" id="display-room">読み込み中...</div>
+    <div class="room-tag" id="display-room"></div>
+    <div class="name-tag" id="display-name"></div>
 </div>
 
 <h2>1. 状況をえらんでください</h2>
@@ -175,10 +187,22 @@
     const app = initializeApp(firebaseConfig);
     const db = initializeFirestore(app, { experimentalForceLongPolling: true });
 
-    // URLから部屋番号を取得
+    // URLから部屋番号とお名前を取得
     const params = new URLSearchParams(window.location.search);
     const room = params.get('room') || "番号なし";
-    document.getElementById('display-room').innerText = room + " の方";
+    const name = params.get('name') || "";
+
+    // 画面への反映（「の方」を消去）
+    document.getElementById('display-room').innerText = room;
+    
+    // お名前の入力があれば表示する
+    const nameDisplayEl = document.getElementById('display-name');
+    if (name) {
+        nameDisplayEl.innerText = name + " 様";
+        nameDisplayEl.style.display = "block";
+    } else {
+        nameDisplayEl.style.display = "none";
+    }
 
     let selectedPriority = "";
     let currentCallId = null;
@@ -219,19 +243,24 @@
         voiceBtn.style.display = "none";
     }
 
-    // 送信
+    // 送信（お名前があれば部屋番号の後ろに結合して識別しやすく）
     document.getElementById('sendBtn').onclick = async () => {
         if (!selectedPriority) return alert("状況を選んでください");
 
         const menus = Array.from(document.querySelectorAll('.menu-item:checked')).map(el => el.value);
+        if (menus.includes("call-details")) { /* 既存値の互換維持用 */ }
+        
         if (menus.includes("その他")) {
             const text = freeText.value.trim();
             if (text) menus.push(`(詳細: ${text})`);
         }
 
+        // 受信ボード側で見やすいように、名前があれば「205-A (山田)」の形式にする
+        const displayRoomIdentifier = name ? `${room} (${name})` : room;
+
         try {
             const docRef = await addDoc(collection(db, "calls"), {
-                room: room,
+                room: displayRoomIdentifier,
                 priority: selectedPriority,
                 menu: menus,
                 createdAt: serverTimestamp()

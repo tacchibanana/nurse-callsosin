@@ -133,7 +133,7 @@
         <strong>すぐ来て</strong><span>(緊急)</span>
     </div>
     <div class="priority-btn btn-yellow" onclick="selectPriority('normal', this)">
-        <strong>急いでいない</strong><span>(あとで)</span>
+        <strong>急がない</strong><span>(あとで)</span>
     </div>
     <div class="priority-btn btn-green" onclick="selectPriority('consult', this)">
         <strong>相談したい</strong><span>(聞きたい)</span>
@@ -148,6 +148,8 @@
     <label><input type="checkbox" class="menu-item" value="気持ち悪い"><span class="menu-label">気持ち悪い</span></label>
     <label><input type="checkbox" class="menu-item" value="息苦しい"><span class="menu-label">息苦しい</span></label>
     <label><input type="checkbox" class="menu-item" value="手伝って"><span class="menu-label">手伝って</span></label>
+    <label><input type="checkbox" class="menu-item" value="あつい"><span class="menu-label">あつい</span></label>
+    <label><input type="checkbox" class="menu-item" value="さむい"><span class="menu-label">さむい</span></label>
     
     <label style="grid-column: span 2;">
         <input type="checkbox" class="menu-item" value="その他" id="other-check">
@@ -192,7 +194,7 @@
     const room = params.get('room') || "番号なし";
     const name = params.get('name') || "";
 
-    // 画面への反映（「の方」を消去）
+    // 画面への反映
     document.getElementById('display-room').innerText = room;
     
     // お名前の入力があれば表示する
@@ -243,19 +245,17 @@
         voiceBtn.style.display = "none";
     }
 
-    // 送信（お名前があれば部屋番号の後ろに結合して識別しやすく）
+    // 送信
     document.getElementById('sendBtn').onclick = async () => {
         if (!selectedPriority) return alert("状況を選んでください");
 
         const menus = Array.from(document.querySelectorAll('.menu-item:checked')).map(el => el.value);
-        if (menus.includes("call-details")) { /* 既存値の互換維持用 */ }
         
         if (menus.includes("その他")) {
             const text = freeText.value.trim();
             if (text) menus.push(`(詳細: ${text})`);
         }
 
-        // 受信ボード側で見やすいように、名前があれば「205-A (山田)」の形式にする
         const displayRoomIdentifier = name ? `${room} (${name})` : room;
 
         try {
